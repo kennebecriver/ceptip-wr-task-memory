@@ -1,63 +1,77 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тренажёр запоминания</title>
+    <title>Recall</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-        body { font-family: 'Inter', system-ui, sans-serif; }
-        .mono { 
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; 
-        }
-        .masked {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            word-break: break-all;   /* ← это решает проблему горизонтального скролла */
-        }
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600&amp;family=SF+Mono:wght@400;500&amp;display=swap');
+        body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", system_ui, sans-serif; }
+        .mono { font-family: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+        
+        .card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card:hover { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05); transform: translateY(-1px); }
+        .masked { transition: all 0.25s ease; word-break: break-all; line-height: 1.35; }
     </style>
 </head>
-<body class="bg-zinc-50 min-h-screen py-8">
+<body class="bg-zinc-50 min-h-screen py-10">
 
-    <div class="max-w-[960px] mx-auto px-5">
+    <div class="max-w-[860px] mx-auto px-5">
 
-        <!-- ЭКРАН ВВОДА -->
+        <!-- EDIT SCREEN -->
         <div id="edit-screen">
-            <div class="text-center mb-10">
-                <h1 class="text-4xl font-semibold tracking-tight text-zinc-900">Тренажёр запоминания</h1>
-                <p class="text-zinc-600 mt-2">Вставь текст → тренируйся по памяти</p>
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center gap-2.5 bg-white rounded-3xl px-5 py-2 shadow-sm border border-zinc-100 mb-6">
+                    <div class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></div>
+                    <span class="text-xs font-medium tracking-[0.125em] text-zinc-500">RECALL</span>
+                </div>
+                <h1 class="text-5xl font-semibold tracking-tighter text-zinc-900">Recall.</h1>
+                <p class="text-zinc-500 mt-2 text-base">Paste → Train → Remember perfectly</p>
             </div>
-            <div class="bg-white rounded-3xl shadow border border-zinc-100 p-8">
-                <textarea id="inputText" rows="13"
-                          class="w-full p-5 text-base mono leading-relaxed border border-zinc-200 rounded-3xl focus:border-violet-500 focus:ring-4 focus:ring-violet-100 outline-none resize-y"
-                          placeholder="Вставьте текст сюда...&#10;Каждая новая строка = отдельное задание"></textarea>
-                <div class="flex gap-4 mt-6">
-                    <button onclick="startTraining()" 
-                            class="flex-1 bg-violet-600 hover:bg-violet-700 text-white font-semibold py-5 rounded-3xl text-lg transition-all">Начать тренировку</button>
+
+            <div class="bg-white rounded-3xl shadow border border-zinc-100 p-6">
+                <textarea id="inputText" rows="11"
+                    class="w-full bg-transparent text-base mono leading-relaxed outline-none resize-y min-h-[260px]"
+                    placeholder="Paste your text here…&#10;Each new line = separate challenge"></textarea>
+                
+                <div class="flex items-center justify-between mt-6 pt-6 border-t border-zinc-100">
                     <button onclick="clearEdit()" 
-                            class="px-10 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 font-medium rounded-3xl transition-all">Очистить</button>
+                            class="text-zinc-400 hover:text-zinc-600 transition-colors flex items-center gap-2 text-sm font-medium">
+                        <i class="fa-solid fa-trash-can text-base"></i> Clear
+                    </button>
+                    <button onclick="startTraining()" 
+                            class="bg-zinc-900 text-white px-8 py-3.5 rounded-2xl font-medium flex items-center gap-3 hover:bg-black transition-all">
+                        Start Training <span class="text-xl">→</span>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- ЭКРАН ТРЕНИРОВКИ -->
+        <!-- TRAINING SCREEN -->
         <div id="train-screen" class="hidden">
             <div class="flex items-center justify-between mb-8">
-                <div>
-                    <h2 class="text-3xl font-semibold text-zinc-900">Тренировка по памяти</h2>
-                    <p id="progress" class="text-zinc-500">0 из 0 строк завершено</p>
+                <div class="flex items-center gap-4">
+                    <h2 class="text-3xl font-semibold tracking-tighter text-zinc-900">Recall Training</h2>
+                    <div class="px-4 py-1.5 bg-white border border-zinc-100 rounded-3xl text-xs font-mono text-zinc-500 flex items-center gap-2">
+                        <span id="progress-text">0 / 0</span>
+                        <span class="text-emerald-500">done</span>
+                    </div>
                 </div>
                 <button onclick="backToEdit()" 
-                        class="px-6 py-3 bg-white border border-zinc-200 hover:border-zinc-300 rounded-3xl flex items-center gap-2 transition-all">
-                    Новый текст
+                        class="flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-zinc-600">
+                    <i class="fa-solid fa-rotate"></i> New text
                 </button>
             </div>
 
-            <div id="pairs" class="space-y-5"></div>
+            <div id="pairs" class="space-y-6"></div>
 
             <div id="success-message" class="hidden mt-20 text-center">
-                <div class="text-7xl mb-4">🎉</div>
-                <h3 class="text-3xl font-semibold text-emerald-700">Ты всё запомнил идеально!</h3>
+                <div class="mx-auto mb-6 w-24 h-24 bg-gradient-to-br from-emerald-400 to-teal-400 rounded-3xl flex items-center justify-center text-7xl shadow-xl">🎉</div>
+                <h3 class="text-4xl font-semibold tracking-tighter text-zinc-900">Mastered.</h3>
+                <p class="text-zinc-500 mt-1">You remembered everything perfectly.</p>
+                <button onclick="backToEdit()" class="mt-12 bg-zinc-900 text-white px-9 py-4 rounded-3xl font-medium hover:bg-black">New session</button>
             </div>
         </div>
     </div>
@@ -67,13 +81,10 @@
 
         function startTraining() {
             const text = document.getElementById('inputText').value.trim();
-            if (!text) return alert('Сначала вставь текст!');
-
+            if (!text) return alert("Paste something first");
             originalLines = text.split('\n').filter(l => l.trim() !== '');
-
             document.getElementById('edit-screen').classList.add('hidden');
             document.getElementById('train-screen').classList.remove('hidden');
-
             renderPairs();
         }
 
@@ -82,61 +93,74 @@
             container.innerHTML = '';
 
             originalLines.forEach((line, i) => {
-                const pairHTML = `
-                    <div class="grid grid-cols-2 gap-6 items-start">
-                        <!-- Левая колонка -->
-                        <div>
-                            <div class="text-xs text-zinc-400 mb-1.5 pl-1">Строка ${i+1}</div>
-                            <div id="masked-${i}" 
-                                 class="masked mono text-[15px] bg-white border border-zinc-200 rounded-3xl px-4 py-4 text-zinc-900 leading-snug min-h-[54px]">
-                                ${'*'.repeat(line.length)}
+                const html = `
+                    <div class="card bg-white rounded-3xl shadow-sm border border-zinc-100 overflow-hidden">
+                        <div class="px-6 pt-5 pb-3 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-2xl bg-zinc-100 text-zinc-500 text-xs font-mono flex items-center justify-center font-medium">${i+1}</div>
+                                <span class="text-xs text-zinc-400 font-medium">Line ${i+1}</span>
                             </div>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <span class="text-xs text-zinc-400">Progressive</span>
+                                <div class="relative toggle">
+                                    <input type="checkbox" id="reveal-${i}" checked class="peer sr-only">
+                                    <div class="w-9 h-5 bg-zinc-200 rounded-full peer-checked:bg-emerald-500 relative">
+                                        <div class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-all peer-checked:translate-x-4 flex items-center justify-center text-[10px]">
+                                            <span id="icon-${i}">👁</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </label>
                         </div>
-
-                        <!-- Правая колонка -->
-                        <div>
-                            <div class="text-xs text-zinc-400 mb-1.5 pl-1">Твой ввод</div>
-                            <input type="text" id="input-${i}"
-                                   class="mono text-[15px] w-full border border-zinc-200 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 rounded-3xl px-4 py-4 outline-none transition-all"
-                                   placeholder="Введи строку по памяти...">
+                        
+                        <div class="grid grid-cols-2 gap-5 px-6 pb-6">
+                            <div>
+                                <div class="text-[10px] font-mono tracking-widest text-zinc-400 mb-2 pl-1">HIDDEN</div>
+                                <div id="masked-${i}" class="masked mono text-[15px] bg-zinc-50 border border-zinc-100 rounded-2xl px-4 py-4 text-zinc-900 min-h-[56px] whitespace-pre-wrap">${'*'.repeat(line.length)}</div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] font-mono tracking-widest text-emerald-500 mb-2 pl-1">YOUR RECALL</div>
+                                <input type="text" id="input-${i}" class="mono text-[15px] w-full border border-zinc-200 focus:border-emerald-500 rounded-2xl px-4 py-4 outline-none transition-all focus:ring-4 focus:ring-emerald-100/60" placeholder="Type from memory...">
+                            </div>
                         </div>
                     </div>
                 `;
-                container.innerHTML += pairHTML;
+                container.innerHTML += html;
             });
 
-            // Подключаем обработчики
+            // handlers (логика остаётся прежней)
             originalLines.forEach((line, i) => {
                 const input = document.getElementById(`input-${i}`);
                 const masked = document.getElementById(`masked-${i}`);
+                const toggle = document.getElementById(`reveal-${i}`);
+                const icon = document.getElementById(`icon-${i}`);
 
-                input.addEventListener('input', () => {
+                const update = () => {
                     const entered = input.value;
-                    let revealed = '';
+                    const progressive = toggle.checked;
+                    let display = progressive 
+                        ? line.split('').map((c, j) => j < entered.length && entered[j] === c ? c : '*'.repeat(line.length - j)).join('').split('*')[0] + '*'.repeat(line.length - (line.split('').map((c, j) => j < entered.length && entered[j] === c ? c : '').join('').length))
+                        : (entered === line ? line : '*'.repeat(line.length));
 
-                    for (let j = 0; j < line.length; j++) {
-                        if (j < entered.length && entered[j] === line[j]) {
-                            revealed += line[j];
-                        } else {
-                            revealed += '*'.repeat(line.length - j);
-                            break;
-                        }
-                    }
-
-                    masked.textContent = revealed || '*'.repeat(line.length);
+                    masked.textContent = display || '*'.repeat(line.length);
 
                     const complete = entered === line;
-
                     if (complete) {
-                        masked.classList.add('!border-emerald-500', '!bg-emerald-50');
-                        input.classList.add('!border-emerald-500', '!bg-emerald-50');
+                        masked.classList.add('!border-emerald-400', '!bg-emerald-50');
+                        input.classList.add('!border-emerald-400', '!bg-emerald-50');
                     } else {
-                        masked.classList.remove('!border-emerald-500', '!bg-emerald-50');
-                        input.classList.remove('!border-emerald-500', '!bg-emerald-50');
+                        masked.classList.remove('!border-emerald-400', '!bg-emerald-50');
+                        input.classList.remove('!border-emerald-400', '!bg-emerald-50');
                     }
 
                     updateProgress();
                     checkAllDone();
+                };
+
+                input.addEventListener('input', update);
+                toggle.addEventListener('change', () => {
+                    icon.textContent = toggle.checked ? '👁' : '🙈';
+                    update();
                 });
             });
         }
@@ -147,7 +171,7 @@
                 const inp = document.getElementById(`input-${i}`);
                 if (inp && inp.value === originalLines[i]) done++;
             });
-            document.getElementById('progress').textContent = `${done} из ${originalLines.length} строк завершено`;
+            document.getElementById('progress-text').textContent = `${done} / ${originalLines.length}`;
         }
 
         function checkAllDone() {
