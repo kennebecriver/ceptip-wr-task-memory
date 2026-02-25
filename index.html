@@ -77,17 +77,27 @@
     </div>
 
     <script>
-        let originalLines = [];
+        let nalLines = [];
 
         function startTraining() {
             const text = document.getElementById('inputText').value.trim();
             if (!text) return alert("Paste something first");
-            originalLines = text.split('\n').filter(l => l.trim() !== '');
+            nalLines = text.split('\n').filter(l => l.trim() !== '');
             document.getElementById('edit-screen').classList.add('hidden');
             document.getElementById('train-screen').classList.remove('hidden');
             renderPairs();
         }
 
+        
+        function updateProgress() {
+            let done = 0;
+            originalLines.forEach((_, i) => {
+                const inp = document.getElementById(`input-${i}`);
+                if (inp && inp.value === originalLines[i]) done++;
+            });
+            document.getElementById('progress-text').textContent = `${done} / ${originalLines.length}`;
+        }        
+        
         function renderPairs() {
             const container = document.getElementById('pairs');
             container.innerHTML = '';
@@ -164,15 +174,8 @@
                 });
             });
         }
-
-        function updateProgress() {
-            let done = 0;
-            originalLines.forEach((_, i) => {
-                const inp = document.getElementById(`input-${i}`);
-                if (inp && inp.value === originalLines[i]) done++;
-            });
-            document.getElementById('progress-text').textContent = `${done} / ${originalLines.length}`;
-        }
+        
+        updateProgress();
 
         function checkAllDone() {
             const allDone = originalLines.every((_, i) => {
