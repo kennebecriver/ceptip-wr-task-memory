@@ -89,14 +89,7 @@
         }
 
         
-        function updateProgress() {
-            let done = 0;
-            originalLines.forEach((_, i) => {
-                const inp = document.getElementById(`input-${i}`);
-                if (inp && inp.value === originalLines[i]) done++;
-            });
-            document.getElementById('progress-text').textContent = `${done} / ${originalLines.length}`;
-        }        
+      
         
         function renderPairs() {
             const container = document.getElementById('pairs');
@@ -176,6 +169,15 @@
         }
         
         updateProgress();
+
+        function updateProgress() {
+            let done = 0;
+            originalLines.forEach((_, i) => {
+                const inp = document.getElementById(`input-${i}`);
+                if (inp && inp.value === originalLines[i]) done++;
+            });
+            document.getElementById('progress-text').textContent = `${done} / ${originalLines.length}`;
+        }        
 
         function checkAllDone() {
             const allDone = originalLines.every((_, i) => {
